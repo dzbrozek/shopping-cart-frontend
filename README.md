@@ -10,7 +10,7 @@ Simple shopping cart witten in React and syncing data with backend via REST API.
 
 #### Backend
 
-The the app requires backend running to sync basket data. 
+The app requires backend running to sync basket data through REST API. 
 Visit [shopping-cart-backend](https://github.com/dzbrozek/shopping-cart-backend/) to learn how to run backend server. 
 
 #### Bootstrap
@@ -21,7 +21,6 @@ To bootstrap the app run `yarn install` to install all dependencies.
 
 To run the app in the development mode call `yarn start`. 
 Open [http://localhost:3000](http://localhost:3000) to view the app in the browser.
-
 
 ### Tests
 
