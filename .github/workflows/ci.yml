@@ -11,6 +11,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
       - name: Install modules
         run: yarn install --frozen-lockfile --ignore-scripts
       - name: Run ESLint
@@ -34,5 +36,5 @@ jobs:
         uses: codecov/codecov-action@v1
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: ./coverage/cobertura-coverage
+          file: ./coverage/cobertura-coverage.xml
 
