@@ -1,0 +1,1 @@
+export { EmptyTableRow } from './styles';
