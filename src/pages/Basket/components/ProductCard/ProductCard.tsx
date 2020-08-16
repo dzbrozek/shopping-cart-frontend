@@ -14,7 +14,7 @@ const ProductCard = ({
   onDelete,
 }: ProductCardProps): React.ReactElement => {
   return (
-    <CardContainer>
+    <CardContainer role="listitem">
       <ImageContainer>
         <CardMedia
           component="img"

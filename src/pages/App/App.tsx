@@ -2,6 +2,7 @@ import React from 'react';
 import { ThemeProvider as StyledThemeProvider } from 'styled-components/macro';
 import { ThemeProvider as MUIThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
+import { SnackbarProvider } from 'notistack';
 
 import Basket from 'pages/Basket';
 
@@ -14,11 +15,11 @@ function App(): React.ReactElement {
       <MUIThemeProvider theme={MUITheme}>
         <CssBaseline />
 
-        <>
+        <SnackbarProvider maxSnack={3}>
           <NavBar />
 
           <Basket />
-        </>
+        </SnackbarProvider>
       </MUIThemeProvider>
     </StyledThemeProvider>
   );

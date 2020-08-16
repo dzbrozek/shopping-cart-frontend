@@ -50,6 +50,7 @@ module.exports = {
       },
     ],
     "react/destructuring-assignment": "warn",
+    "import/no-unresolved": "off",
   },
   "settings": {
     "import/resolver": {
