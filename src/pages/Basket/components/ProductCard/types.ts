@@ -1,6 +1,6 @@
+import { ProductResponse } from 'api/types';
+
 export interface ProductCardProps {
-  name: string;
-  price: number;
-  image: string;
+  product: ProductResponse;
   onDelete?: () => void;
 }

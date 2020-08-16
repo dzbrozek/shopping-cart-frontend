@@ -1,6 +1,7 @@
 ## Shopping cart
 
-Simple shopping cart witten in React and syncing data with backend via REST API.
+Simple shopping cart witten in React and syncing data with backend via REST API. 
+To add a new product to a basket just drag and drop it to the basket.
 
 
 [![codecov](https://codecov.io/gh/dzbrozek/shopping-cart-frontend/branch/master/graph/badge.svg)](https://codecov.io/gh/dzbrozek/shopping-cart-frontend)

@@ -1,4 +1,5 @@
 import userEvent from '@testing-library/user-event';
+
 import React from 'react';
 import { screen, within, waitFor } from '@testing-library/react';
 import { AxiosError, AxiosPromise } from 'axios';
@@ -31,6 +32,7 @@ describe('<BasketProducts />', () => {
 
     renderWithProvider(<BasketProducts />, {
       withSnackbar: true,
+      withDragAndDrop: true,
     });
 
     const table = await screen.findByRole('table', { name: 'Product basket' });
@@ -51,6 +53,7 @@ describe('<BasketProducts />', () => {
 
     renderWithProvider(<BasketProducts />, {
       withSnackbar: true,
+      withDragAndDrop: true,
     });
 
     expect(await screen.findByText(/Unable to load basket/)).toBeTruthy();
@@ -84,6 +87,7 @@ describe('<BasketProducts />', () => {
 
     renderWithProvider(<BasketProducts />, {
       withSnackbar: true,
+      withDragAndDrop: true,
     });
 
     const table = await screen.findByRole('table', { name: 'Product basket' });
@@ -115,6 +119,7 @@ describe('<BasketProducts />', () => {
 
     renderWithProvider(<BasketProducts />, {
       withSnackbar: true,
+      withDragAndDrop: true,
     });
 
     const table = await screen.findByRole('table', { name: 'Product basket' });
@@ -141,6 +146,7 @@ describe('<BasketProducts />', () => {
 
     renderWithProvider(<BasketProducts />, {
       withSnackbar: true,
+      withDragAndDrop: true,
     });
 
     const table = await screen.findByRole('table', { name: 'Product basket' });
@@ -172,12 +178,13 @@ describe('<BasketProducts />', () => {
     mockedAPI.basket.mockResolvedValueOnce(({
       data,
     } as unknown) as AxiosPromise<BasketProductResponse[]>);
-    mockedAPI.deleteProduct.mockResolvedValueOnce(({
+    mockedAPI.removeProductFromBasket.mockResolvedValueOnce(({
       data: '',
     } as unknown) as AxiosPromise<string>);
 
     renderWithProvider(<BasketProducts />, {
       withSnackbar: true,
+      withDragAndDrop: true,
     });
 
     const table = await screen.findByRole('table', { name: 'Product basket' });
@@ -198,15 +205,17 @@ describe('<BasketProducts />', () => {
 
     expect(within(table).queryByText('Garden Hose')).toBeNull();
 
-    expect(mockedAPI.deleteProduct).toHaveBeenCalledTimes(1);
-    expect(mockedAPI.deleteProduct).toHaveBeenCalledWith(data[0].product.uuid);
+    expect(mockedAPI.removeProductFromBasket).toHaveBeenCalledTimes(1);
+    expect(mockedAPI.removeProductFromBasket).toHaveBeenCalledWith(
+      data[0].product.uuid,
+    );
   });
 
   it('should fail to remove product from basket', async () => {
     mockedAPI.basket.mockResolvedValueOnce(({
       data: BasketProductResponseFactory.buildList(2),
     } as unknown) as AxiosPromise<BasketProductResponse[]>);
-    mockedAPI.deleteProduct.mockRejectedValueOnce(({
+    mockedAPI.removeProductFromBasket.mockRejectedValueOnce(({
       response: {
         status: 500,
       },
@@ -214,6 +223,7 @@ describe('<BasketProducts />', () => {
 
     renderWithProvider(<BasketProducts />, {
       withSnackbar: true,
+      withDragAndDrop: true,
     });
 
     const table = await screen.findByRole('table', { name: 'Product basket' });

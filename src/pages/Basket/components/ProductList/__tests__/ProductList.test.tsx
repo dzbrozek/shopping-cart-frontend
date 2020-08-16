@@ -48,6 +48,7 @@ describe('<ProductList />', () => {
 
     renderWithProvider(<ProductList />, {
       withSnackbar: true,
+      withDragAndDrop: true,
     });
 
     expect(await screen.findAllByRole('listitem')).toHaveLength(3);
@@ -137,6 +138,7 @@ describe('<ProductList />', () => {
 
       renderWithProvider(<ProductList />, {
         withSnackbar: true,
+        withDragAndDrop: true,
       });
 
       const cards = await screen.findAllByRole('listitem');
@@ -169,6 +171,7 @@ describe('<ProductList />', () => {
 
       renderWithProvider(<ProductList />, {
         withSnackbar: true,
+        withDragAndDrop: true,
       });
 
       const cards = await screen.findAllByRole('listitem');
@@ -197,6 +200,7 @@ describe('<ProductList />', () => {
 
       renderWithProvider(<ProductList />, {
         withSnackbar: true,
+        withDragAndDrop: true,
       });
 
       expect(await screen.findAllByRole('listitem')).toHaveLength(3);
@@ -215,6 +219,7 @@ describe('<ProductList />', () => {
 
       renderWithProvider(<ProductList />, {
         withSnackbar: true,
+        withDragAndDrop: true,
       });
 
       expect(await screen.findAllByRole('listitem')).toHaveLength(3);

@@ -1,10 +1,12 @@
-import styled from 'styled-components/macro';
+import styled, { css } from 'styled-components/macro';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 
 export const Container = styled.div`
-  flex-grow: 1;
   margin-left: ${({ theme }) => theme.spacing(2)}px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 `;
 
 export const Summary = styled(Box)`
@@ -13,4 +15,14 @@ export const Summary = styled(Box)`
 
 export const Total = styled(Typography)`
   flex-grow: 1;
+`;
+
+export const DropContainer = styled.div<{ isDragging: boolean }>`
+  ${({ isDragging, theme }) =>
+    isDragging
+      ? css`
+          border: 2px dashed ${theme.palette.primary.main};
+        `
+      : css``};
+  flex: 1;
 `;
