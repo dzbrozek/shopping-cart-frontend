@@ -1,8 +1,8 @@
 import React from 'react';
 
 import { Container } from './styles';
-import ProductList from './ProductList';
-import BasketProducts from './BasketProducts';
+import ProductList from './components/ProductList';
+import BasketProducts from './components/BasketProducts';
 
 const Basket = (): React.ReactElement => {
   return (

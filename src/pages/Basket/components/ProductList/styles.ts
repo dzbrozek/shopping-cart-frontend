@@ -7,8 +7,8 @@ export const Container = styled.div`
 `;
 
 export const ListContainer = styled.div`
-  overflow-y: scroll;
-  padding: 0 ${({ theme }) => theme.spacing(2)}px;
+  overflow-y: auto;
+  min-width: 340px;
 `;
 
 export const AddProductButton = styled(IconButton)`
