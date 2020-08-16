@@ -188,7 +188,7 @@ describe('<ProductList />', () => {
       );
     });
 
-    it('shouldn\'t show remove button to non-admin', async () => {
+    it("shouldn't show remove button to non-admin", async () => {
       mockedAPI.me.mockResolvedValueOnce(({
         data: MeResponseFactory.build({
           isAdmin: false,
@@ -201,10 +201,12 @@ describe('<ProductList />', () => {
 
       expect(await screen.findAllByRole('listitem')).toHaveLength(3);
 
-      expect(screen.queryByRole('button', { name: 'Delete product' })).toBeNull();
+      expect(
+        screen.queryByRole('button', { name: 'Delete product' }),
+      ).toBeNull();
     });
 
-    it('shouldn\'t show remove button to not authenticated user', async () => {
+    it("shouldn't show remove button to not authenticated user", async () => {
       mockedAPI.me.mockRejectedValueOnce(({
         response: {
           status: 403,
@@ -217,7 +219,9 @@ describe('<ProductList />', () => {
 
       expect(await screen.findAllByRole('listitem')).toHaveLength(3);
 
-      expect(screen.queryByRole('button', { name: 'Delete product' })).toBeNull();
+      expect(
+        screen.queryByRole('button', { name: 'Delete product' }),
+      ).toBeNull();
     });
   });
 });
