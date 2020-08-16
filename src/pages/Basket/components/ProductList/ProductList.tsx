@@ -90,9 +90,7 @@ const ProductList = (): React.ReactElement => {
           {productsData?.map((product) => (
             <Box marginY={2} key={product.uuid}>
               <ProductCard
-                name={product.name}
-                price={Number(product.price)}
-                image={product.image}
+                product={product}
                 onDelete={
                   meData?.isAdmin ? deleteProduct(product.uuid) : undefined
                 }

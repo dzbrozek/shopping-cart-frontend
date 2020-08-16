@@ -49,6 +49,13 @@ class API {
     });
   }
 
+  static removeProductFromBasket(productId: string): AxiosPromise<string> {
+    return API.request({
+      url: `/basket/products/${productId}/`,
+      method: 'DELETE',
+    });
+  }
+
   static request<T = unknown>(config: AxiosRequestConfig): AxiosPromise<T> {
     return axios({
       ...config,

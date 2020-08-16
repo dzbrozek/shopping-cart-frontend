@@ -1,5 +1,8 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+
+import { ProductResponseFactory } from 'factories/api';
+import { renderWithProvider } from 'utils/render';
 
 import { ProductCardProps } from '../types';
 import ProductCard from '../ProductCard';
@@ -9,9 +12,11 @@ describe('<ProductCard />', () => {
 
   beforeEach(() => {
     props = {
-      image: 'https://test.com/hose.png',
-      name: 'Garden Hose',
-      price: 12.35,
+      product: ProductResponseFactory.build({
+        image: 'https://test.com/hose.png',
+        name: 'Garden Hose',
+        price: '12.35',
+      }),
     };
   });
 
@@ -20,7 +25,9 @@ describe('<ProductCard />', () => {
   });
 
   it('should render component', () => {
-    render(<ProductCard {...props} />);
+    renderWithProvider(<ProductCard {...props} />, {
+      withDragAndDrop: true,
+    });
 
     expect(screen.getByText('Garden Hose')).toBeTruthy();
 
@@ -30,7 +37,9 @@ describe('<ProductCard />', () => {
   });
 
   it('should render delete product button', () => {
-    render(<ProductCard {...props} onDelete={jest.fn()} />);
+    renderWithProvider(<ProductCard {...props} onDelete={jest.fn()} />, {
+      withDragAndDrop: true,
+    });
 
     expect(
       screen.getByRole('button', { name: /Delete product/i }),
@@ -38,7 +47,9 @@ describe('<ProductCard />', () => {
   });
 
   it("shouldn't render delete product button", () => {
-    render(<ProductCard {...props} />);
+    renderWithProvider(<ProductCard {...props} />, {
+      withDragAndDrop: true,
+    });
 
     expect(
       screen.queryByRole('button', { name: /Delete product/i }),
@@ -47,7 +58,9 @@ describe('<ProductCard />', () => {
 
   it('should handle delete product', async () => {
     const onDelete = jest.fn();
-    render(<ProductCard {...props} onDelete={onDelete} />);
+    renderWithProvider(<ProductCard {...props} onDelete={onDelete} />, {
+      withDragAndDrop: true,
+    });
 
     fireEvent.click(screen.getByRole('button', { name: /Delete product/i }));
 

@@ -11,7 +11,6 @@ const useMe = (): responseInterface<MeResponse, AxiosError> => {
   };
 
   return useSWR('/me/', fetcher, {
-    errorRetryInterval: 0,
     errorRetryCount: 0,
   });
 };

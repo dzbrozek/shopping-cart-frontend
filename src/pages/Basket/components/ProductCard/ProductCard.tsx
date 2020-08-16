@@ -3,18 +3,30 @@ import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
 import Typography from '@material-ui/core/Typography';
 import ClearIcon from '@material-ui/icons/Clear';
+import { useDrag } from 'react-dnd';
+
+import { DraggableItemType } from 'core/constants';
 
 import { CardContainer, ImageContainer, DeleteButton } from './styles';
 import { ProductCardProps } from './types';
 
 const ProductCard = ({
-  name,
-  price,
-  image,
+  product,
   onDelete,
 }: ProductCardProps): React.ReactElement => {
+  const { uuid, name, price, image } = product;
+  const drag = useDrag({
+    item: {
+      type: DraggableItemType.ProductCard,
+      productId: uuid,
+    },
+    collect: (monitor) => ({
+      isDragging: monitor.isDragging(),
+    }),
+  })[1];
+
   return (
-    <CardContainer role="listitem">
+    <CardContainer role="listitem" innerRef={drag}>
       <ImageContainer>
         <CardMedia
           component="img"
@@ -37,7 +49,7 @@ const ProductCard = ({
           {name}
         </Typography>
         <Typography variant="body2" color="textSecondary" component="p">
-          {`$${price}`}
+          ${price}
         </Typography>
       </CardContent>
     </CardContainer>
