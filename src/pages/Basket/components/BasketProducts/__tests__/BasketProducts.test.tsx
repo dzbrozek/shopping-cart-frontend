@@ -123,9 +123,7 @@ describe('<BasketProducts />', () => {
 
     userEvent.click(screen.getByRole('button', { name: 'Clear' }));
 
-    await waitFor(() =>
-      expect(within(table).getByText('Your basket is empty')).toBeTruthy(),
-    );
+    expect(await within(table).findByText('Your basket is empty')).toBeTruthy();
 
     expect(mockedAPI.clearBasket).toHaveBeenCalledTimes(1);
     expect(mockedAPI.clearBasket).toHaveBeenCalledWith();

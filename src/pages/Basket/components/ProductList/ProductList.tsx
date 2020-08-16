@@ -26,7 +26,7 @@ const ProductList = (): React.ReactElement => {
   const deleteProduct = (productId: string) => async (): Promise<void> => {
     const oldData = [...(productsData || [])];
     await mutateProducts(
-      oldData?.filter((product) => product.uuid !== productId),
+      oldData.filter((product) => product.uuid !== productId),
       false,
     );
 

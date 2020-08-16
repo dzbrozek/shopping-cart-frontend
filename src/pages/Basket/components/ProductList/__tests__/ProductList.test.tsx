@@ -99,7 +99,7 @@ describe('<ProductList />', () => {
     expect(screen.queryByRole('button', { name: 'Add product' })).toBeNull();
   });
 
-  it("shouldn't render add product button for authenticated user", async () => {
+  it("shouldn't render add product button for not authenticated user", async () => {
     mockedAPI.me.mockRejectedValueOnce(({
       response: {
         status: 403,
@@ -123,14 +123,14 @@ describe('<ProductList />', () => {
       mockedAPI.products.mockResolvedValueOnce(({
         data: products,
       } as unknown) as AxiosPromise<ProductResponse[]>);
+    });
+
+    it('should successfully remove product by admin', async () => {
       mockedAPI.me.mockResolvedValueOnce(({
         data: MeResponseFactory.build({
           isAdmin: true,
         }),
       } as unknown) as AxiosPromise<MeResponse>);
-    });
-
-    it('should successfully remove product', async () => {
       mockedAPI.deleteProduct.mockResolvedValueOnce(({
         data: '',
       } as unknown) as AxiosPromise);
@@ -155,7 +155,12 @@ describe('<ProductList />', () => {
       expect(mockedAPI.deleteProduct).toHaveBeenCalledWith(products[1].uuid);
     });
 
-    it('should fail to remove product', async () => {
+    it('should fail to remove product by admin', async () => {
+      mockedAPI.me.mockResolvedValueOnce(({
+        data: MeResponseFactory.build({
+          isAdmin: true,
+        }),
+      } as unknown) as AxiosPromise<MeResponse>);
       mockedAPI.deleteProduct.mockRejectedValueOnce(({
         response: {
           status: 404,
@@ -181,6 +186,38 @@ describe('<ProductList />', () => {
       await waitFor(() =>
         expect(screen.getAllByRole('listitem')).toHaveLength(3),
       );
+    });
+
+    it('shouldn\'t show remove button to non-admin', async () => {
+      mockedAPI.me.mockResolvedValueOnce(({
+        data: MeResponseFactory.build({
+          isAdmin: false,
+        }),
+      } as unknown) as AxiosPromise<MeResponse>);
+
+      renderWithProvider(<ProductList />, {
+        withSnackbar: true,
+      });
+
+      expect(await screen.findAllByRole('listitem')).toHaveLength(3);
+
+      expect(screen.queryByRole('button', { name: 'Delete product' })).toBeNull();
+    });
+
+    it('shouldn\'t show remove button to not authenticated user', async () => {
+      mockedAPI.me.mockRejectedValueOnce(({
+        response: {
+          status: 403,
+        },
+      } as unknown) as AxiosError);
+
+      renderWithProvider(<ProductList />, {
+        withSnackbar: true,
+      });
+
+      expect(await screen.findAllByRole('listitem')).toHaveLength(3);
+
+      expect(screen.queryByRole('button', { name: 'Delete product' })).toBeNull();
     });
   });
 });

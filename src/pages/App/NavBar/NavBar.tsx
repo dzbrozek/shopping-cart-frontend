@@ -13,7 +13,7 @@ import useMe from 'hooks/useMe';
 import { Title } from './styles';
 
 const NavBar = (): React.ReactElement => {
-  const { data, error } = useMe();
+  const { data: meData, error: meError } = useMe();
   const [anchorEl, setAnchorEl] = React.useState<HTMLElement | null>(null);
   const open = Boolean(anchorEl);
 
@@ -29,7 +29,7 @@ const NavBar = (): React.ReactElement => {
     <AppBar position="static">
       <Toolbar>
         <Title variant="h6">Shopping Cart</Title>
-        {data ? (
+        {meData ? (
           <div>
             <IconButton
               aria-label="account of current user"
@@ -57,7 +57,7 @@ const NavBar = (): React.ReactElement => {
             </Menu>
           </div>
         ) : null}
-        {error ? <Button color="inherit">Login</Button> : null}
+        {meError ? <Button color="inherit">Login</Button> : null}
       </Toolbar>
     </AppBar>
   );
