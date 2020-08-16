@@ -46,6 +46,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test --colors --watch --watchAll=false --env=jest-environment-jsdom-sixteen",
     "test:ci": "CI=true react-scripts test --colors --coverage --env=jest-environment-jsdom-sixteen",
+    "test:all": "yarn lint && yarn typecheck && yarn test",
     "eject": "react-scripts eject",
     "typecheck": "tsc --noEmit",
     "lint": "eslint --ext .ts,.tsx,.js,.jsx ./src --max-warnings=0",

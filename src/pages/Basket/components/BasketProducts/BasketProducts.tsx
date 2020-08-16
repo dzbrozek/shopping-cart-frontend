@@ -12,7 +12,6 @@ import Button from '@material-ui/core/Button';
 import { useDrop, DragObjectWithType } from 'react-dnd';
 import Table from '@material-ui/core/Table';
 
-import { BasketProductResponse } from 'api/types';
 import { DraggableItemType } from 'core/constants';
 import API from 'api';
 import { EmptyTableRow } from 'components/EmptyTableRow';
@@ -57,9 +56,7 @@ const BasketProducts = (): React.ReactElement => {
   const addProduct = async (productId: string): Promise<void> => {
     const oldBasket = [...(basketData || [])];
     let quantity = 1;
-    const existingBasketProduct:
-      | BasketProductResponse
-      | undefined = oldBasket.find(
+    const existingBasketProduct = oldBasket.find(
       (basketProduct) => basketProduct.product.uuid === productId,
     );
     if (existingBasketProduct) {

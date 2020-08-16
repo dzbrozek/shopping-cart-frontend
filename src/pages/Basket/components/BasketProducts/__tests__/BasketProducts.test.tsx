@@ -1,11 +1,9 @@
 import userEvent from '@testing-library/user-event';
 
 import React from 'react';
-import { screen, within, waitFor, fireEvent } from '@testing-library/react';
+import { screen, within, waitFor } from '@testing-library/react';
 import { AxiosError, AxiosPromise } from 'axios';
 import { cache } from 'swr';
-
-import ProductCard from 'pages/Basket/components/ProductCard';
 
 import API from 'api';
 import { BasketProductResponse } from 'api/types';

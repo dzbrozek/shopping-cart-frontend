@@ -1,4 +1,3 @@
-import React from 'react';
 import styled, { css } from 'styled-components/macro';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
@@ -25,6 +24,5 @@ export const DropContainer = styled.div<{ isDragging: boolean }>`
           border: 2px dashed ${theme.palette.primary.main};
         `
       : css``};
-  min-height: 500px;
   flex: 1;
 `;
