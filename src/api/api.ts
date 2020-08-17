@@ -56,6 +56,24 @@ class API {
     });
   }
 
+  static login(data: {
+    email: string;
+    password: string;
+  }): AxiosPromise<MeResponse> {
+    return API.request({
+      url: `/login/`,
+      method: 'POST',
+      data,
+    });
+  }
+
+  static logOut(): AxiosPromise<string> {
+    return API.request({
+      url: `/logout/`,
+      method: 'POST',
+    });
+  }
+
   static request<T = unknown>(config: AxiosRequestConfig): AxiosPromise<T> {
     return axios({
       ...config,

@@ -41,7 +41,6 @@ const ProductList = (): React.ReactElement => {
   };
 
   const addProduct = (): void => {
-    // eslint-disable-next-line no-console
     console.log('add product');
   };
 
