@@ -3,6 +3,7 @@ import { AxiosError } from 'axios';
 
 import API from 'api';
 import { MeResponse } from 'api/types';
+import { isStatusError } from 'utils/api';
 
 const useMe = (): responseInterface<MeResponse | null, AxiosError> => {
   const fetcher = async (): Promise<MeResponse | null> => {
@@ -10,7 +11,7 @@ const useMe = (): responseInterface<MeResponse | null, AxiosError> => {
       const { data } = await API.me();
       return data;
     } catch (e) {
-      if (e.response?.status !== 403) {
+      if (!isStatusError(e, 403)) {
         console.log('API me error', e);
       }
       return null;

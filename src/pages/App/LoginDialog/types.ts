@@ -3,7 +3,7 @@ export interface LoginDialogProps {
   onClose: () => void;
 }
 
-export interface LoginDialogFormValues {
+export interface LoginFormValues {
   email: string;
   password: string;
 }

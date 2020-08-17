@@ -56,7 +56,7 @@ class API {
     });
   }
 
-  static login(data: {
+  static logIn(data: {
     email: string;
     password: string;
   }): AxiosPromise<MeResponse> {

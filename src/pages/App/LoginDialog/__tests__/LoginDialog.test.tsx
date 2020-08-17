@@ -3,7 +3,7 @@ import { screen } from '@testing-library/react';
 
 import { renderWithProvider } from 'utils/render';
 
-import LoginDialog from '../LoginDialog';
+import LoginDialog, { schema } from '../LoginDialog';
 
 describe('<LoginDialog />', () => {
   it('should render dialog', () => {
@@ -22,5 +22,34 @@ describe('<LoginDialog />', () => {
     expect(screen.getByRole('button', { name: 'Close' })).toBeEnabled();
 
     expect(screen.getByRole('button', { name: 'Login' })).toBeEnabled();
+  });
+
+  describe('schema', () => {
+    it('should reject empty values', () => {
+      expect(
+        schema.isValidSync({
+          email: '',
+          password: '',
+        }),
+      ).toBeFalsy();
+    });
+
+    it('should reject invalid email', () => {
+      expect(
+        schema.isValidSync({
+          email: 'email',
+          password: 'password',
+        }),
+      ).toBeFalsy();
+    });
+
+    it('should accept valid values', () => {
+      expect(
+        schema.isValidSync({
+          email: 'test@email.com',
+          password: 'password',
+        }),
+      ).toBeTruthy();
+    });
   });
 });

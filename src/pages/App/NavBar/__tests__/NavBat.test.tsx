@@ -71,15 +71,13 @@ describe('<NavBar />', () => {
       withSnackbar: true,
     });
 
-    await act(async () =>
+    await act(async () => {
       userEvent.click(
         await screen.findByRole('button', { name: 'account of current user' }),
-      ),
-    );
+      );
 
-    await act(async () =>
-      userEvent.click(await screen.findByRole('menuitem', { name: 'Log out' })),
-    );
+      userEvent.click(await screen.findByRole('menuitem', { name: 'Log out' }));
+    });
 
     await waitFor(() =>
       expect(
@@ -104,15 +102,13 @@ describe('<NavBar />', () => {
       withSnackbar: true,
     });
 
-    await act(async () =>
+    await act(async () => {
       userEvent.click(
         await screen.findByRole('button', { name: 'account of current user' }),
-      ),
-    );
+      );
 
-    await act(async () =>
-      userEvent.click(await screen.findByRole('menuitem', { name: 'Log out' })),
-    );
+      userEvent.click(await screen.findByRole('menuitem', { name: 'Log out' }));
+    });
 
     expect(await screen.findByRole('alert')).toHaveTextContent(
       'You cannot log out right now',
@@ -123,7 +119,7 @@ describe('<NavBar />', () => {
     ).toBeTruthy();
   });
 
-  describe('login dialog', () => {
+  describe('logIn dialog', () => {
     beforeEach(() => {
       mockedAPI.me.mockRejectedValueOnce(({
         response: {
@@ -132,14 +128,16 @@ describe('<NavBar />', () => {
       } as unknown) as AxiosPromise<MeResponse>);
     });
 
-    it('should close login dialog', async () => {
+    it('should close logIn dialog', async () => {
       renderWithProvider(<NavBar />, {
         withSnackbar: true,
       });
 
       expect(screen.queryByRole('dialog')).toBeNull();
 
-      userEvent.click(await screen.findByRole('button', { name: 'Login' }));
+      await act(async () =>
+        userEvent.click(await screen.findByRole('button', { name: 'Login' })),
+      );
 
       await waitFor(() =>
         expect(screen.getByRole('dialog', { name: 'Login' })).toBeVisible(),
@@ -152,20 +150,22 @@ describe('<NavBar />', () => {
       await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
     });
 
-    it('should successfully login', async () => {
-      mockedAPI.login.mockResolvedValueOnce(({
+    it('should successfully logIn', async () => {
+      mockedAPI.logIn.mockResolvedValueOnce(({
         data: MeResponseFactory.build(),
       } as unknown) as AxiosPromise<MeResponse>);
       renderWithProvider(<NavBar />, {
         withSnackbar: true,
       });
 
-      userEvent.click(await screen.findByRole('button', { name: 'Login' }));
+      await act(async () =>
+        userEvent.click(await screen.findByRole('button', { name: 'Login' })),
+      );
 
-      const dialog = screen.getByRole('dialog', { name: 'Login' });
+      const dialog = await screen.findByRole('dialog', { name: 'Login' });
       const dialogContent = within(dialog);
 
-      await waitFor(() => expect(dialog).toBeVisible());
+      expect(dialog).toBeVisible();
 
       await act(async () => {
         await userEvent.type(
@@ -189,15 +189,15 @@ describe('<NavBar />', () => {
         await screen.findByRole('button', { name: 'account of current user' }),
       ).toBeTruthy();
 
-      expect(mockedAPI.login).toHaveBeenCalledTimes(1);
-      expect(mockedAPI.login).toHaveBeenCalledWith({
+      expect(mockedAPI.logIn).toHaveBeenCalledTimes(1);
+      expect(mockedAPI.logIn).toHaveBeenCalledWith({
         email: 'test@email.com',
         password: 'password',
       });
     });
 
-    it('should fail to login', async () => {
-      mockedAPI.login.mockRejectedValueOnce(({
+    it('should fail to logIn', async () => {
+      mockedAPI.logIn.mockRejectedValueOnce(({
         response: {
           status: 400,
           data: ['Invalid credentials'],
@@ -207,12 +207,14 @@ describe('<NavBar />', () => {
         withSnackbar: true,
       });
 
-      userEvent.click(await screen.findByRole('button', { name: 'Login' }));
+      await act(async () =>
+        userEvent.click(await screen.findByRole('button', { name: 'Login' })),
+      );
 
-      const dialog = screen.getByRole('dialog', { name: 'Login' });
+      const dialog = await screen.findByRole('dialog', { name: 'Login' });
       const dialogContent = within(dialog);
 
-      await waitFor(() => expect(dialog).toBeVisible());
+      expect(dialog).toBeVisible();
 
       await act(async () => {
         await userEvent.type(
@@ -228,7 +230,7 @@ describe('<NavBar />', () => {
         userEvent.click(dialogContent.getByRole('button', { name: 'Login' }));
       });
 
-      await waitFor(() => expect(mockedAPI.login).toHaveBeenCalledTimes(1));
+      await waitFor(() => expect(mockedAPI.logIn).toHaveBeenCalledTimes(1));
 
       expect(screen.getByRole('dialog', { name: 'Login' })).toBeVisible();
 

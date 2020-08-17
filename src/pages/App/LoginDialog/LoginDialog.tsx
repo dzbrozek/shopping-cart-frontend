@@ -15,9 +15,9 @@ import FormHelperText from '@material-ui/core/FormHelperText';
 import API from 'api';
 import { formErrors } from 'utils/api';
 
-import { LoginDialogProps, LoginDialogFormValues } from './types';
+import { LoginDialogProps, LoginFormValues } from './types';
 
-const schema = yup.object().shape({
+export const schema = yup.object().shape({
   email: yup
     .string()
     .email('Please provide valid email')
@@ -30,30 +30,30 @@ const LoginDialog = ({
   onClose,
 }: LoginDialogProps): React.ReactElement => {
   const { handleSubmit, register, errors, reset, setError } = useForm<
-    LoginDialogFormValues & { nonFieldError: string }
+    LoginFormValues
   >({
     resolver: yupResolver(schema),
   });
-  const [isLogging, setIsLogging] = React.useState(false);
-  const [globalError, setGlobalError] = React.useState('');
-  const onSubmit = async (data: LoginDialogFormValues): Promise<void> => {
+  const [isLogining, setIsLogining] = React.useState(false);
+  const [stateError, setStateError] = React.useState<string | undefined>(
+    undefined,
+  );
+  const onSubmit = async (data: LoginFormValues): Promise<void> => {
     try {
-      setIsLogging(true);
-      const { data: meData } = await API.login(data);
+      setIsLogining(true);
+      const { data: meData } = await API.logIn(data);
       await mutate('/me/', meData, false);
-      setGlobalError('');
+      setStateError('');
       reset();
       onClose();
     } catch (e) {
-      const [nonFieldError, fieldErrors] = formErrors<
-        keyof LoginDialogFormValues
-      >(e);
-      fieldErrors.forEach(({ name, error }) => {
+      const [nonFieldError, fieldErrors] = formErrors<keyof LoginFormValues>(e);
+      fieldErrors?.forEach(({ name, error }) => {
         setError(name, error);
       });
-      setGlobalError(nonFieldError);
+      setStateError(nonFieldError);
     } finally {
-      setIsLogging(false);
+      setIsLogining(false);
     }
   };
 
@@ -67,9 +67,9 @@ const LoginDialog = ({
       <DialogTitle id="login-dialog-title">Login</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
-          {globalError ? (
+          {stateError ? (
             <Box marginY={2}>
-              <FormHelperText error>{globalError}</FormHelperText>
+              <FormHelperText error>{stateError}</FormHelperText>
             </Box>
           ) : null}
           <TextField
@@ -101,7 +101,7 @@ const LoginDialog = ({
           <Button onClick={onClose} color="secondary">
             Close
           </Button>
-          <Button color="primary" type="submit" disabled={isLogging}>
+          <Button color="primary" type="submit" disabled={isLogining}>
             Login
           </Button>
         </DialogActions>

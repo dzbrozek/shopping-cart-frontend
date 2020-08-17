@@ -47,7 +47,7 @@ describe('api', () => {
           data: ['Invalid credentials'],
         },
       } as unknown) as AxiosError;
-      expect(formErrors(error)).toEqual(['Invalid credentials', []]);
+      expect(formErrors(error)).toEqual(['Invalid credentials', undefined]);
     });
 
     it('should test bad request with non field errors', () => {
@@ -59,7 +59,7 @@ describe('api', () => {
           },
         },
       } as unknown) as AxiosError;
-      expect(formErrors(error)).toEqual(['Invalid credentials', []]);
+      expect(formErrors(error)).toEqual(['Invalid credentials', undefined]);
     });
 
     it('should test bad request with field errors', () => {
@@ -73,7 +73,7 @@ describe('api', () => {
         },
       } as unknown) as AxiosError;
       expect(formErrors(error)).toEqual([
-        '',
+        undefined,
         [
           {
             name: 'email',

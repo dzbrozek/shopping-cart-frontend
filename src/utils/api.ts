@@ -22,7 +22,7 @@ export function formErrors<T extends string>(
   defaultNonFieldError:
     | string
     | undefined = 'Something went wrong. Please try later',
-): [string, ErrorType<T>[]] {
+): [string | undefined, ErrorType<T>[] | undefined] {
   if (!isStatusError(error, 400) || !error.response?.data) {
     return [defaultNonFieldError, []];
   }
@@ -31,11 +31,11 @@ export function formErrors<T extends string>(
     response: { data },
   } = error;
   if (Array.isArray(data)) {
-    return [data.join(' '), []];
+    return [data.join(' '), undefined];
   }
 
   if (!data) {
-    return [defaultNonFieldError, []];
+    return [defaultNonFieldError, undefined];
   }
 
   const { nonFieldErrors } = data;
@@ -52,5 +52,8 @@ export function formErrors<T extends string>(
       },
     });
   }
-  return [(nonFieldErrors || []).join(' '), fieldErrors];
+  return [
+    nonFieldErrors ? nonFieldErrors.join(' ') : undefined,
+    fieldErrors.length ? fieldErrors : undefined,
+  ];
 }
