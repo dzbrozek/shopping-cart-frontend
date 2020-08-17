@@ -51,6 +51,7 @@ module.exports = {
     ],
     "react/destructuring-assignment": "warn",
     "import/no-unresolved": "off",
+    "no-console": "off",
   },
   "settings": {
     "import/resolver": {
