@@ -6,6 +6,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import AddIcon from '@material-ui/icons/Add';
+import { mutate } from 'swr';
 
 import API from 'api';
 import useMe from 'hooks/useMe';
@@ -32,6 +33,7 @@ const ProductList = (): React.ReactElement => {
 
     try {
       await API.deleteProduct(productId);
+      await mutate('/basket/');
     } catch (e) {
       enqueueSnackbar('Product cannot be deleted right now', {
         variant: 'error',
