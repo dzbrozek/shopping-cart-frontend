@@ -68,7 +68,7 @@ const ProductList = (): React.ReactElement => {
         </Alert>
       ) : (
         <Box role="list" paddingX={2}>
-          {productsData?.map((product) => (
+          {productsData.map((product) => (
             <Box marginY={2} key={product.uuid}>
               <ProductCard
                 product={product}
