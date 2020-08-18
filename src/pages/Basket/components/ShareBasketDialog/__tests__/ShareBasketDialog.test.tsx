@@ -34,24 +34,34 @@ describe('<ShareBasketDialog />', () => {
     it('should reject missing email', () => {
       try {
         expect(
-          schema.validateSync({
-            email: '',
-          }),
+          schema.validateSync(
+            {
+              email: '',
+            },
+            {
+              abortEarly: false,
+            },
+          ),
         );
       } catch (e) {
-        expect(e.message).toEqual('Please provide email');
+        expect(e.errors).toEqual(['Please provide email']);
       }
     });
 
     it('should reject invalid email', () => {
       try {
         expect(
-          schema.validateSync({
-            email: 'email',
-          }),
+          schema.validateSync(
+            {
+              email: 'email',
+            },
+            {
+              abortEarly: false,
+            },
+          ),
         );
       } catch (e) {
-        expect(e.message).toEqual('Please provide valid email');
+        expect(e.errors).toEqual(['Please provide valid email']);
       }
     });
   });

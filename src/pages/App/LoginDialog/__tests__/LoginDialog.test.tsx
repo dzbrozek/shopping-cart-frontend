@@ -26,21 +26,38 @@ describe('<LoginDialog />', () => {
 
   describe('schema', () => {
     it('should reject empty values', () => {
-      expect(
-        schema.isValidSync({
-          email: '',
-          password: '',
-        }),
-      ).toBeFalsy();
+      try {
+        schema.validateSync(
+          {
+            email: '',
+            password: '',
+          },
+          {
+            abortEarly: false,
+          },
+        );
+      } catch (e) {
+        expect(e.errors).toEqual([
+          'Please provide email',
+          'Please provide password',
+        ]);
+      }
     });
 
     it('should reject invalid email', () => {
-      expect(
-        schema.isValidSync({
-          email: 'email',
-          password: 'password',
-        }),
-      ).toBeFalsy();
+      try {
+        schema.validateSync(
+          {
+            email: 'email',
+            password: 'password',
+          },
+          {
+            abortEarly: false,
+          },
+        );
+      } catch (e) {
+        expect(e.errors).toEqual(['Please provide valid email']);
+      }
     });
 
     it('should accept valid values', () => {

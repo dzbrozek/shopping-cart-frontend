@@ -44,6 +44,44 @@ const ProductList = (): React.ReactElement => {
     console.log('add product');
   };
 
+  let content;
+
+  if (productsError) {
+    content = (
+      <Alert severity="error">
+        <AlertTitle>Error</AlertTitle>
+        Unable to load products.
+      </Alert>
+    );
+  } else if (!productsData) {
+    content = (
+      <Box justifyContent="center" display="flex" padding={2}>
+        <CircularProgress />
+      </Box>
+    );
+  } else {
+    content =
+      productsData.length === 0 ? (
+        <Alert severity="info">
+          <AlertTitle>Info</AlertTitle>
+          No product to display
+        </Alert>
+      ) : (
+        <Box role="list" paddingX={2}>
+          {productsData?.map((product) => (
+            <Box marginY={2} key={product.uuid}>
+              <ProductCard
+                product={product}
+                onDelete={
+                  meData?.isAdmin ? deleteProduct(product.uuid) : undefined
+                }
+              />
+            </Box>
+          ))}
+        </Box>
+      );
+  }
+
   return (
     <Container>
       <Box
@@ -64,40 +102,7 @@ const ProductList = (): React.ReactElement => {
         ) : null}
       </Box>
 
-      <ListContainer>
-        {!productsData && !productsError ? (
-          <Box justifyContent="center" display="flex" padding={2}>
-            <CircularProgress />
-          </Box>
-        ) : null}
-
-        {productsError ? (
-          <Alert severity="error">
-            <AlertTitle>Error</AlertTitle>
-            Unable to load products.
-          </Alert>
-        ) : null}
-
-        {productsData?.length === 0 ? (
-          <Alert severity="info">
-            <AlertTitle>Info</AlertTitle>
-            No product to display
-          </Alert>
-        ) : null}
-
-        <Box role="list" paddingX={2}>
-          {productsData?.map((product) => (
-            <Box marginY={2} key={product.uuid}>
-              <ProductCard
-                product={product}
-                onDelete={
-                  meData?.isAdmin ? deleteProduct(product.uuid) : undefined
-                }
-              />
-            </Box>
-          ))}
-        </Box>
-      </ListContainer>
+      <ListContainer>{content}</ListContainer>
     </Container>
   );
 };
