@@ -172,7 +172,7 @@ const BasketProducts = (): React.ReactElement => {
             <Summary width="50%" marginTop={2}>
               <Box display="flex" marginBottom={1}>
                 <Total variant="h5">Total:</Total>
-                <Typography variant="h5">
+                <Typography variant="h5" aria-label="total price">
                   $
                   {basketData
                     .map(
@@ -180,7 +180,8 @@ const BasketProducts = (): React.ReactElement => {
                         basketProduct.quantity *
                         Number(basketProduct.product.price),
                     )
-                    .reduce((prev, current) => prev + current, 0)}
+                    .reduce((prev, current) => prev + current, 0)
+                    .toFixed(2)}
                 </Typography>
               </Box>
 

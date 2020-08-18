@@ -51,7 +51,7 @@ const BasketRow = ({
           {quantity}
         </motion.div>
       </TableCell>
-      <TableCell align="right">${price * quantity}</TableCell>
+      <TableCell align="right">${(price * quantity).toFixed(2)}</TableCell>
       <TableCell align="right">
         <IconButton
           color="secondary"
