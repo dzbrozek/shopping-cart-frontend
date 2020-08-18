@@ -36,7 +36,7 @@ describe('<BasketRow />', () => {
 
     expect(screen.getByText('Garden Hose')).toBeTruthy();
 
-    expect(screen.getByText('$24.7')).toBeTruthy();
+    expect(screen.getByText('$24.70')).toBeTruthy();
 
     expect(
       screen.getByRole('button', { name: /Remove product/i }),
