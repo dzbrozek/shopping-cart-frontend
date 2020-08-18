@@ -119,10 +119,6 @@ const BasketProducts = (): React.ReactElement => {
     }
   };
 
-  const handleCloseShareDialog = (): void => {
-    setShareDialogOpen(false);
-  };
-
   let content;
   if (basketError) {
     content = (
@@ -168,7 +164,7 @@ const BasketProducts = (): React.ReactElement => {
           </Table>
         </Box>
 
-        {basketData?.length ? (
+        {basketData.length ? (
           <Box paddingX={2}>
             <Summary width="50%" marginTop={2}>
               <Box display="flex" marginBottom={1}>
@@ -221,7 +217,7 @@ const BasketProducts = (): React.ReactElement => {
 
       <ShareBasketDialog
         open={isShareDialogOpen}
-        onClose={handleCloseShareDialog}
+        onClose={() => setShareDialogOpen(false)}
       />
     </Container>
   );

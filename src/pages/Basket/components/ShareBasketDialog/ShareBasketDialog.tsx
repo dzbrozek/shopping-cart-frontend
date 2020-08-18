@@ -62,7 +62,6 @@ const ShareBasketDialog = ({
       open={open}
       onClose={onClose}
       aria-labelledby="share-dialog-title"
-      aria-describedby="share-dialog-description"
       maxWidth="sm"
       fullWidth>
       <DialogTitle id="share-dialog-title">Share basket</DialogTitle>
