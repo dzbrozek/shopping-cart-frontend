@@ -104,8 +104,49 @@ describe('<BasketProducts />', () => {
     expect(row.getByText('$69.98')).toBeTruthy();
     expect(row.getByRole('button', { name: /Remove product/i })).toBeTruthy();
 
+    expect(
+      (await screen.findByRole('heading', { name: 'total price' })).textContent,
+    ).toEqual('$83.97');
+
     expect(screen.getByRole('button', { name: 'Share' })).toBeTruthy();
     expect(screen.getByRole('button', { name: 'Clear' })).toBeTruthy();
+  });
+
+  it('should round prices', async () => {
+    const data = [
+      BasketProductResponseFactory.build({
+        product: ProductResponseFactory.build({
+          price: '0.1',
+        }),
+        quantity: 3,
+      }),
+      BasketProductResponseFactory.build({
+        product: ProductResponseFactory.build({
+          price: '0.3',
+        }),
+        quantity: 1,
+      }),
+    ];
+    mockedAPI.basket.mockResolvedValueOnce(({
+      data,
+    } as unknown) as AxiosPromise<BasketProductResponse[]>);
+
+    renderWithProvider(<BasketProducts />, {
+      withSnackbar: true,
+      withDragAndDrop: true,
+    });
+
+    const priceCell = within(
+      within(
+        await screen.findByRole('table', { name: 'Product basket' }),
+      ).getAllByRole('row')[0],
+    ).getAllByRole('cell')[3];
+
+    expect(priceCell.textContent).toEqual('$0.30');
+
+    expect(
+      screen.getByRole('heading', { name: 'total price' }).textContent,
+    ).toEqual('$0.60');
   });
 
   it('should successfully clear basket', async () => {
