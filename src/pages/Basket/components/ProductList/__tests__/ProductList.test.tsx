@@ -1,7 +1,7 @@
 import userEvent from '@testing-library/user-event';
 import { AxiosError, AxiosPromise } from 'axios';
 import React from 'react';
-import { screen, waitFor, within } from '@testing-library/react';
+import { act, screen, waitFor, within } from '@testing-library/react';
 import { cache } from 'swr';
 
 import { MeResponse, ProductResponse } from 'api/types';
@@ -227,6 +227,154 @@ describe('<ProductList />', () => {
       expect(
         screen.queryByRole('button', { name: 'Delete product' }),
       ).toBeNull();
+    });
+  });
+
+  describe('add product dialog', () => {
+    let file: File;
+
+    beforeEach(() => {
+      mockedAPI.me.mockResolvedValueOnce(({
+        data: MeResponseFactory.build({
+          isAdmin: true,
+        }),
+      } as unknown) as AxiosPromise<MeResponse>);
+      mockedAPI.products.mockResolvedValueOnce(({
+        data: ProductResponseFactory.buildList(2),
+      } as unknown) as AxiosPromise<ProductResponse[]>);
+
+      file = new File(['hello'], 'hello.png', { type: 'image/png' });
+    });
+
+    it('should close add product dialog', async () => {
+      renderWithProvider(<ProductList />, {
+        withSnackbar: true,
+        withDragAndDrop: true,
+      });
+
+      expect(screen.queryByRole('dialog')).toBeNull();
+
+      await act(async () =>
+        userEvent.click(
+          await screen.findByRole('button', { name: 'Add product' }),
+        ),
+      );
+
+      await waitFor(() =>
+        expect(
+          screen.getByRole('dialog', { name: 'Add new product' }),
+        ).toBeVisible(),
+      );
+
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: 'Close' }));
+      });
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    });
+
+    it('should successfully add new product', async () => {
+      mockedAPI.createProduct.mockResolvedValueOnce(({
+        data: ProductResponseFactory.build(),
+      } as unknown) as AxiosPromise<ProductResponse>);
+
+      renderWithProvider(<ProductList />, {
+        withSnackbar: true,
+        withDragAndDrop: true,
+      });
+
+      await waitFor(() =>
+        expect(screen.queryAllByRole('listitem').length).toEqual(2),
+      );
+
+      await act(async () =>
+        userEvent.click(screen.getByRole('button', { name: 'Add product' })),
+      );
+
+      const dialog = await screen.findByRole('dialog', {
+        name: 'Add new product',
+      });
+      const dialogContent = within(dialog);
+
+      expect(dialog).toBeVisible();
+
+      await act(async () => {
+        await userEvent.type(
+          dialogContent.getByLabelText('Name'),
+          'New product',
+        );
+
+        await userEvent.type(dialogContent.getByLabelText('Price'), '29.99');
+
+        await userEvent.upload(dialogContent.getByLabelText('Image'), file);
+
+        userEvent.click(dialogContent.getByRole('button', { name: 'Add' }));
+      });
+
+      await waitFor(() =>
+        expect(screen.queryAllByRole('listitem').length).toEqual(3),
+      );
+
+      expect(screen.queryByRole('dialog')).toBeNull();
+
+      expect(mockedAPI.createProduct).toHaveBeenCalledTimes(1);
+      expect(mockedAPI.createProduct).toHaveBeenCalledWith({
+        name: 'New product',
+        price: 29.99,
+        image: 'data:image/png;base64,aGVsbG8=',
+      });
+    });
+
+    it('should fail to add new product', async () => {
+      mockedAPI.createProduct.mockRejectedValueOnce(({
+        response: {
+          status: 400,
+          data: {
+            image: ['Invalid image format'],
+          },
+        },
+      } as unknown) as AxiosError);
+
+      renderWithProvider(<ProductList />, {
+        withSnackbar: true,
+        withDragAndDrop: true,
+      });
+
+      await act(async () =>
+        userEvent.click(
+          await screen.findByRole('button', { name: 'Add product' }),
+        ),
+      );
+
+      const dialog = await screen.findByRole('dialog', {
+        name: 'Add new product',
+      });
+      const dialogContent = within(dialog);
+
+      expect(dialog).toBeVisible();
+
+      await act(async () => {
+        await userEvent.type(
+          dialogContent.getByLabelText('Name'),
+          'New product',
+        );
+
+        await userEvent.type(dialogContent.getByLabelText('Price'), '29.99');
+
+        await userEvent.upload(dialogContent.getByLabelText('Image'), file);
+
+        userEvent.click(dialogContent.getByRole('button', { name: 'Add' }));
+      });
+
+      await waitFor(() =>
+        expect(mockedAPI.createProduct).toHaveBeenCalledTimes(1),
+      );
+
+      expect(dialog).toBeVisible();
+
+      expect(dialogContent.getByText('Invalid image format')).toBeTruthy();
+
+      expect(dialogContent.getByRole('button', { name: 'Add' })).toBeEnabled();
     });
   });
 });
