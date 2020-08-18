@@ -24,7 +24,7 @@ const ProductList = (): React.ReactElement => {
     mutate: mutateProducts,
   } = useProducts();
   const { enqueueSnackbar } = useSnackbar();
-  const [isAddingProduct, setIsAddingProduct] = React.useState(false);
+  const [addProductDialogOpen, setAddProductDialogOpen] = React.useState(false);
 
   const deleteProduct = (productId: string) => async (): Promise<void> => {
     const oldData = [...(productsData || [])];
@@ -96,7 +96,7 @@ const ProductList = (): React.ReactElement => {
           <AddProductButton
             color="primary"
             aria-label="Add product"
-            onClick={() => setIsAddingProduct(true)}>
+            onClick={() => setAddProductDialogOpen(true)}>
             <AddIcon />
           </AddProductButton>
         ) : null}
@@ -105,8 +105,8 @@ const ProductList = (): React.ReactElement => {
       <ListContainer>{content}</ListContainer>
 
       <AddProductDialog
-        open={isAddingProduct}
-        onClose={() => setIsAddingProduct(false)}
+        open={addProductDialogOpen}
+        onClose={() => setAddProductDialogOpen(false)}
       />
     </Container>
   );

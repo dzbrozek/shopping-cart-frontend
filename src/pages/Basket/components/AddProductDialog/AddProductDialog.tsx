@@ -22,7 +22,7 @@ import { AddProductDialogProps, AddProductFormValues } from './types';
 
 export const schema = yup.object().shape({
   name: yup.string().max(200).required('Please provide name'),
-  price: yup.number().typeError('Please provide valid price'),
+  price: yup.number().typeError('Please provide valid number'),
   image: yup.mixed().test('isFile', 'Please select image', (value) => {
     return !!value.length;
   }),

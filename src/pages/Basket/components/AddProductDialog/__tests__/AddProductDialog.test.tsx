@@ -7,9 +7,7 @@ import AddProductDialog, { schema } from '../AddProductDialog';
 
 describe('<AddProductDialog />', () => {
   it('should render component', () => {
-    renderWithProvider(<AddProductDialog open onClose={jest.fn()} />, {
-      withSnackbar: true,
-    });
+    renderWithProvider(<AddProductDialog open onClose={jest.fn()} />);
 
     expect(screen.getByRole('heading')).toHaveTextContent('Add new product');
 
@@ -58,7 +56,7 @@ describe('<AddProductDialog />', () => {
       } catch (e) {
         expect(e.errors).toEqual([
           'Please provide name',
-          'Please provide valid price',
+          'Please provide valid number',
           'Please select image',
         ]);
       }
