@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'framer-motion';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import Box from '@material-ui/core/Box';
@@ -141,18 +142,20 @@ const BasketProducts = (): React.ReactElement => {
         <Box padding={2}>
           <Table aria-label="Product basket">
             <TableBody>
-              {basketData.map(
-                ({ uuid: productBasketUuid, quantity, product }) => (
-                  <BasketRow
-                    key={productBasketUuid}
-                    quantity={quantity}
-                    name={product.name}
-                    price={Number(product.price)}
-                    image={product.image}
-                    onDelete={removeProduct(product.uuid)}
-                  />
-                ),
-              )}
+              <AnimatePresence initial={false}>
+                {basketData.map(
+                  ({ uuid: productBasketUuid, quantity, product }) => (
+                    <BasketRow
+                      key={productBasketUuid}
+                      quantity={quantity}
+                      name={product.name}
+                      price={Number(product.price)}
+                      image={product.image}
+                      onDelete={removeProduct(product.uuid)}
+                    />
+                  ),
+                )}
+              </AnimatePresence>
               {!basketData.length ? (
                 <EmptyTableRow>
                   <TableCell colSpan={5} align="center">

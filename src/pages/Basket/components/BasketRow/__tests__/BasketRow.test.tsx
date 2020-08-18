@@ -1,5 +1,7 @@
 import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import { screen, fireEvent, waitFor } from '@testing-library/react';
+
+import { renderWithProvider } from 'utils/render';
 
 import BasketRow from '../BasketRow';
 import { BasketRowProps } from '../types';
@@ -22,7 +24,7 @@ describe('<BasketRow />', () => {
   });
 
   it('should render component', () => {
-    render(
+    renderWithProvider(
       <table>
         <tbody>
           <BasketRow {...props} />
@@ -42,7 +44,7 @@ describe('<BasketRow />', () => {
   });
 
   it('should handle remove product', async () => {
-    render(
+    renderWithProvider(
       <table>
         <tbody>
           <BasketRow {...props} />

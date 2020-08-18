@@ -27,6 +27,7 @@
     "eslint-plugin-testing-library": "^3.6.0",
     "faker": "^4.1.0",
     "fontsource-roboto": "^3.0.3",
+    "framer-motion": "^2.5.0",
     "husky": "^4.2.5",
     "jest-environment-jsdom-sixteen": "^1.0.3",
     "lint-staged": "^10.2.11",

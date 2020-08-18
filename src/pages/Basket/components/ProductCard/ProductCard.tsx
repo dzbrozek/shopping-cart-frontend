@@ -1,3 +1,4 @@
+import { motion } from 'framer-motion';
 import React from 'react';
 import CardMedia from '@material-ui/core/CardMedia';
 import CardContent from '@material-ui/core/CardContent';
@@ -26,7 +27,13 @@ const ProductCard = ({
   })[1];
 
   return (
-    <CardContainer role="listitem" innerRef={drag}>
+    <CardContainer
+      role="listitem"
+      innerRef={drag}
+      component={
+        motion.div as React.ElementType<React.HTMLAttributes<HTMLElement>>
+      }
+      exit={{ opacity: 0 }}>
       <ImageContainer>
         <CardMedia
           component="img"
