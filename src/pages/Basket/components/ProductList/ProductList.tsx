@@ -1,3 +1,4 @@
+import { AnimatePresence } from 'framer-motion';
 import { useSnackbar } from 'notistack';
 import React from 'react';
 import Alert from '@material-ui/lab/Alert';
@@ -68,16 +69,18 @@ const ProductList = (): React.ReactElement => {
         </Alert>
       ) : (
         <Box role="list" paddingX={2}>
-          {productsData.map((product) => (
-            <Box marginY={2} key={product.uuid}>
-              <ProductCard
-                product={product}
-                onDelete={
-                  meData?.isAdmin ? deleteProduct(product.uuid) : undefined
-                }
-              />
-            </Box>
-          ))}
+          <AnimatePresence initial={false}>
+            {productsData.map((product) => (
+              <Box marginY={2} key={product.uuid}>
+                <ProductCard
+                  product={product}
+                  onDelete={
+                    meData?.isAdmin ? deleteProduct(product.uuid) : undefined
+                  }
+                />
+              </Box>
+            ))}
+          </AnimatePresence>
         </Box>
       );
   }
