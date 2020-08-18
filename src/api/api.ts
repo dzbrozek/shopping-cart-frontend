@@ -82,6 +82,18 @@ class API {
     });
   }
 
+  static createProduct(data: {
+    name: string;
+    price: number;
+    image: string;
+  }): AxiosPromise<ProductResponse> {
+    return API.request({
+      url: '/products/',
+      method: 'POST',
+      data,
+    });
+  }
+
   static request<T = unknown>(config: AxiosRequestConfig): AxiosPromise<T> {
     return axios({
       ...config,
