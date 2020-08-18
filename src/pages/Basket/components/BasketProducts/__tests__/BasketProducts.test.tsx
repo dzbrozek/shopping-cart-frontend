@@ -1,7 +1,6 @@
 import userEvent from '@testing-library/user-event';
-
 import React from 'react';
-import { screen, within, waitFor } from '@testing-library/react';
+import { screen, within, waitFor, act } from '@testing-library/react';
 import { AxiosError, AxiosPromise } from 'axios';
 import { cache } from 'swr';
 
@@ -241,5 +240,129 @@ describe('<BasketProducts />', () => {
     );
 
     expect(within(table).getAllByRole('row')).toHaveLength(2);
+  });
+
+  describe('share dialog', () => {
+    beforeEach(() => {
+      mockedAPI.basket.mockResolvedValue(({
+        data: BasketProductResponseFactory.buildList(2),
+      } as unknown) as AxiosPromise<BasketProductResponse[]>);
+    });
+
+    it('should close share dialog', async () => {
+      renderWithProvider(<BasketProducts />, {
+        withSnackbar: true,
+        withDragAndDrop: true,
+      });
+
+      expect(screen.queryByRole('dialog')).toBeNull();
+
+      await act(async () =>
+        userEvent.click(await screen.findByRole('button', { name: 'Share' })),
+      );
+
+      await waitFor(() =>
+        expect(
+          screen.getByRole('dialog', { name: 'Share basket' }),
+        ).toBeVisible(),
+      );
+
+      await act(async () => {
+        userEvent.click(screen.getByRole('button', { name: 'Close' }));
+      });
+
+      await waitFor(() => expect(screen.queryByRole('dialog')).toBeNull());
+    });
+
+    it('should successfully share basket', async () => {
+      mockedAPI.shareBasket.mockResolvedValueOnce(({
+        data: '',
+      } as unknown) as AxiosPromise<string>);
+
+      renderWithProvider(<BasketProducts />, {
+        withSnackbar: true,
+        withDragAndDrop: true,
+      });
+
+      await act(async () =>
+        userEvent.click(await screen.findByRole('button', { name: 'Share' })),
+      );
+
+      const dialog = await screen.findByRole('dialog', {
+        name: 'Share basket',
+      });
+      const dialogContent = within(dialog);
+
+      expect(dialog).toBeVisible();
+
+      await act(async () => {
+        await userEvent.type(
+          dialogContent.getByLabelText('Email'),
+          'test@email.com',
+        );
+
+        userEvent.click(dialogContent.getByRole('button', { name: 'Share' }));
+      });
+
+      expect(await screen.findByRole('alert')).toHaveTextContent(
+        'Basket has been shared',
+      );
+
+      expect(screen.queryByRole('dialog')).toBeNull();
+
+      expect(mockedAPI.shareBasket).toHaveBeenCalledTimes(1);
+      expect(mockedAPI.shareBasket).toHaveBeenCalledWith({
+        email: 'test@email.com',
+      });
+    });
+
+    it('should fail to share basket', async () => {
+      mockedAPI.shareBasket.mockRejectedValueOnce(({
+        response: {
+          status: 400,
+          data: {
+            email: ['Invalid email'],
+          },
+        },
+      } as unknown) as AxiosError);
+      renderWithProvider(<BasketProducts />, {
+        withSnackbar: true,
+        withDragAndDrop: true,
+      });
+
+      await act(async () =>
+        userEvent.click(await screen.findByRole('button', { name: 'Share' })),
+      );
+
+      const dialog = await screen.findByRole('dialog', {
+        name: 'Share basket',
+      });
+      const dialogContent = within(dialog);
+
+      expect(dialog).toBeVisible();
+
+      await act(async () => {
+        await userEvent.type(
+          dialogContent.getByLabelText('Email'),
+          'test@email.com',
+        );
+
+        userEvent.click(dialogContent.getByRole('button', { name: 'Share' }));
+      });
+
+      await waitFor(() =>
+        expect(mockedAPI.shareBasket).toHaveBeenCalledTimes(1),
+      );
+
+      expect(
+        screen.getByRole('dialog', { name: 'Share basket' }),
+      ).toBeVisible();
+
+      expect(
+        dialogContent.getByRole('button', { name: 'Share' }),
+      ).toBeEnabled();
+
+      expect(dialogContent.getByText('Invalid email')).toBeTruthy();
+    });
   });
 });

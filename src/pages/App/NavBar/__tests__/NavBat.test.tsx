@@ -119,7 +119,7 @@ describe('<NavBar />', () => {
     ).toBeTruthy();
   });
 
-  describe('logIn dialog', () => {
+  describe('login dialog', () => {
     beforeEach(() => {
       mockedAPI.me.mockRejectedValueOnce(({
         response: {
@@ -128,7 +128,7 @@ describe('<NavBar />', () => {
       } as unknown) as AxiosPromise<MeResponse>);
     });
 
-    it('should close logIn dialog', async () => {
+    it('should close login dialog', async () => {
       renderWithProvider(<NavBar />, {
         withSnackbar: true,
       });
@@ -196,7 +196,7 @@ describe('<NavBar />', () => {
       });
     });
 
-    it('should fail to logIn', async () => {
+    it('should fail to log in', async () => {
       mockedAPI.logIn.mockRejectedValueOnce(({
         response: {
           status: 400,
