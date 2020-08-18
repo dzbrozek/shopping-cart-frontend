@@ -61,7 +61,7 @@ class API {
     password: string;
   }): AxiosPromise<MeResponse> {
     return API.request({
-      url: `/login/`,
+      url: '/login/',
       method: 'POST',
       data,
     });
@@ -69,8 +69,16 @@ class API {
 
   static logOut(): AxiosPromise<string> {
     return API.request({
-      url: `/logout/`,
+      url: '/logout/',
       method: 'POST',
+    });
+  }
+
+  static shareBasket(data: { email: string }): AxiosPromise<string> {
+    return API.request({
+      url: '/basket/share/',
+      method: 'POST',
+      data,
     });
   }
 

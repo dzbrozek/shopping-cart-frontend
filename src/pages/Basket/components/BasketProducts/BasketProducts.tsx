@@ -19,6 +19,7 @@ import { EmptyTableRow } from 'components/EmptyTableRow';
 import useBasket from '../../hooks/useBasket';
 import { Container, Summary, Total, DropContainer } from './styles';
 import BasketRow from '../BasketRow';
+import ShareBasketDialog from '../ShareBasketDialog';
 
 const updateDataList = <T extends unknown>(
   dataList: T[],
@@ -52,6 +53,7 @@ const BasketProducts = (): React.ReactElement => {
       addProduct(productId);
     },
   });
+  const [isShareDialogOpen, setShareDialogOpen] = React.useState(false);
 
   const addProduct = async (productId: string): Promise<void> => {
     const oldBasket = [...(basketData || [])];
@@ -117,51 +119,53 @@ const BasketProducts = (): React.ReactElement => {
     }
   };
 
-  return (
-    <Container>
-      <Box display="flex" alignItems="center" minHeight="50px">
-        <Typography variant="h5">Basket</Typography>
+  const handleCloseShareDialog = (): void => {
+    setShareDialogOpen(false);
+  };
+
+  let content;
+  if (basketError) {
+    content = (
+      <Box padding={2}>
+        <Alert severity="error">
+          <AlertTitle>Error</AlertTitle>
+          Unable to load basket.
+        </Alert>
       </Box>
+    );
+  } else if (!basketData) {
+    content = (
+      <Box justifyContent="center" display="flex" padding={2}>
+        <CircularProgress />
+      </Box>
+    );
+  } else {
+    content = (
       <DropContainer ref={drop} isDragging={isDragging}>
         <Box padding={2}>
-          {!basketData && !basketError ? (
-            <Box justifyContent="center" display="flex" padding={2}>
-              <CircularProgress />
-            </Box>
-          ) : null}
-
-          {basketError ? (
-            <Alert severity="error">
-              <AlertTitle>Error</AlertTitle>
-              Unable to load basket.
-            </Alert>
-          ) : null}
-
-          {basketData ? (
-            <Table aria-label="Product basket">
-              <TableBody>
-                {basketData.map(
-                  ({ uuid: productBasketUuid, quantity, product }) => (
-                    <BasketRow
-                      key={productBasketUuid}
-                      quantity={quantity}
-                      name={product.name}
-                      price={Number(product.price)}
-                      image={product.image}
-                      onDelete={removeProduct(product.uuid)}
-                    />
-                  ),
-                )}
-                {!basketData.length ? (
-                  <EmptyTableRow>
-                    <TableCell colSpan={5} align="center">
-                      Your basket is empty
-                    </TableCell>
-                  </EmptyTableRow>
-                ) : null}
-              </TableBody>
-            </Table>
-          ) : null}
+          <Table aria-label="Product basket">
+            <TableBody>
+              {basketData.map(
+                ({ uuid: productBasketUuid, quantity, product }) => (
+                  <BasketRow
+                    key={productBasketUuid}
+                    quantity={quantity}
+                    name={product.name}
+                    price={Number(product.price)}
+                    image={product.image}
+                    onDelete={removeProduct(product.uuid)}
+                  />
+                ),
+              )}
+              {!basketData.length ? (
+                <EmptyTableRow>
+                  <TableCell colSpan={5} align="center">
+                    Your basket is empty
+                  </TableCell>
+                </EmptyTableRow>
+              ) : null}
+            </TableBody>
+          </Table>
         </Box>
 
         {basketData?.length ? (
@@ -185,7 +189,10 @@ const BasketProducts = (): React.ReactElement => {
             </Summary>
 
             <Box display="flex" justifyContent="flex-end" marginTop={2}>
-              <Button variant="outlined" color="primary">
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => setShareDialogOpen(true)}>
                 Share
               </Button>
 
@@ -201,6 +208,21 @@ const BasketProducts = (): React.ReactElement => {
           </Box>
         ) : null}
       </DropContainer>
+    );
+  }
+
+  return (
+    <Container>
+      <Box display="flex" alignItems="center" minHeight="50px">
+        <Typography variant="h5">Basket</Typography>
+      </Box>
+
+      {content}
+
+      <ShareBasketDialog
+        open={isShareDialogOpen}
+        onClose={handleCloseShareDialog}
+      />
     </Container>
   );
 };

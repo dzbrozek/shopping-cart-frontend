@@ -1,57 +1,59 @@
-import React from 'react';
+import { yupResolver } from '@hookform/resolvers';
 import Box from '@material-ui/core/Box';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
-import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers';
-import { mutate } from 'swr';
-import * as yup from 'yup';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 import FormHelperText from '@material-ui/core/FormHelperText';
+import TextField from '@material-ui/core/TextField';
+import { useSnackbar } from 'notistack';
+import React from 'react';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
 
 import API from 'api';
 import { formErrors } from 'utils/api';
 
-import { LoginDialogProps, LoginFormValues } from './types';
+import { ShareBasketDialogProps, ShareFormValues } from './types';
 
 export const schema = yup.object().shape({
   email: yup
     .string()
     .email('Please provide valid email')
     .required('Please provide email'),
-  password: yup.string().required('Please provide password'),
 });
 
-const LoginDialog = ({
+const ShareBasketDialog = ({
   open,
   onClose,
-}: LoginDialogProps): React.ReactElement => {
-  const { handleSubmit, register, errors, setError } = useForm<LoginFormValues>(
+}: ShareBasketDialogProps): React.ReactElement => {
+  const { handleSubmit, register, errors, setError } = useForm<ShareFormValues>(
     {
       resolver: yupResolver(schema),
     },
   );
-  const [isLogining, setIsLogining] = React.useState(false);
+  const [isSharing, setIsSharing] = React.useState(false);
   const [stateError, setStateError] = React.useState<string | undefined>(
     undefined,
   );
-  const onSubmit = async (data: LoginFormValues): Promise<void> => {
+  const { enqueueSnackbar } = useSnackbar();
+  const onSubmit = async (data: ShareFormValues): Promise<void> => {
     try {
-      setIsLogining(true);
-      const { data: meData } = await API.logIn(data);
-      await mutate('/me/', meData, false);
+      setIsSharing(true);
+      await API.shareBasket(data);
+      enqueueSnackbar('Basket has been shared', {
+        variant: 'success',
+      });
       onClose();
     } catch (e) {
-      const [nonFieldError, fieldErrors] = formErrors<keyof LoginFormValues>(e);
+      const [nonFieldError, fieldErrors] = formErrors<keyof ShareFormValues>(e);
       fieldErrors?.forEach(({ name, error }) => {
         setError(name, error);
       });
       setStateError(nonFieldError);
     } finally {
-      setIsLogining(false);
+      setIsSharing(false);
     }
   };
 
@@ -59,10 +61,11 @@ const LoginDialog = ({
     <Dialog
       open={open}
       onClose={onClose}
-      aria-labelledby="login-dialog-title"
+      aria-labelledby="share-dialog-title"
+      aria-describedby="share-dialog-description"
       maxWidth="sm"
       fullWidth>
-      <DialogTitle id="login-dialog-title">Login</DialogTitle>
+      <DialogTitle id="share-dialog-title">Share basket</DialogTitle>
       <form onSubmit={handleSubmit(onSubmit)}>
         <DialogContent>
           {stateError ? (
@@ -81,26 +84,13 @@ const LoginDialog = ({
             error={!!errors.email?.message}
             helperText={errors.email?.message}
           />
-
-          <Box marginY={2}>
-            <TextField
-              id="password"
-              name="password"
-              label="Password"
-              type="password"
-              fullWidth
-              inputRef={register}
-              error={!!errors.password?.message}
-              helperText={errors.password?.message}
-            />
-          </Box>
         </DialogContent>
         <DialogActions>
           <Button onClick={onClose} color="secondary">
             Close
           </Button>
-          <Button color="primary" type="submit" disabled={isLogining}>
-            Login
+          <Button color="primary" type="submit" disabled={isSharing}>
+            Share
           </Button>
         </DialogActions>
       </form>
@@ -108,4 +98,4 @@ const LoginDialog = ({
   );
 };
 
-export default LoginDialog;
+export default ShareBasketDialog;
