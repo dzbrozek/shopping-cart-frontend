@@ -63,7 +63,7 @@ module.exports = {
   },
   "overrides": [
     {
-      "files": ["**/__tests__/*.test.{ts,tsx}"],
+      "files": ["**/__tests__/*.test.{ts,tsx}", "**/__stories__/*.stories.{ts,tsx}"],
       "rules": {
         "@typescript-eslint/ban-ts-ignore": "off",
         "@typescript-eslint/explicit-function-return-type": "off"
