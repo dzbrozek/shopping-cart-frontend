@@ -38,7 +38,10 @@ const BasketRow = ({
   }, [controls, quantity]);
 
   return (
-    <TableRow component={motion.tr} exit={{ opacity: 0, y: 300 }}>
+    <TableRow
+      component={motion.tr}
+      exit={{ opacity: 0, y: 300 }}
+      animate={{ opacity: 1, y: 0 }}>
       <TableCell>
         <ProductImage src={image} alt={name} title={name} />
       </TableCell>

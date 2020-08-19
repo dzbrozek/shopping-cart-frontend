@@ -33,6 +33,7 @@ const ProductCard = ({
       component={
         motion.div as React.ElementType<React.HTMLAttributes<HTMLElement>>
       }
+      animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}>
       <ImageContainer>
         <CardMedia
