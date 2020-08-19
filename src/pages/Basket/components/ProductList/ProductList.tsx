@@ -68,7 +68,7 @@ const ProductList = (): React.ReactElement => {
           No product to display
         </Alert>
       ) : (
-        <Box role="list" paddingX={2}>
+        <Box role="list" marginRight={2}>
           <AnimatePresence initial={false}>
             {productsData.map((product) => (
               <Box marginY={2} key={product.uuid}>
