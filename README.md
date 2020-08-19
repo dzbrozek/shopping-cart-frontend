@@ -6,8 +6,9 @@ To add a new product to a basket just drag and drop it to the basket.
 
 [![codecov](https://codecov.io/gh/dzbrozek/shopping-cart-frontend/branch/master/graph/badge.svg)](https://codecov.io/gh/dzbrozek/shopping-cart-frontend)
 
-
 ### App
+
+![Basket](assets/basket.png)
 
 #### Backend
 
